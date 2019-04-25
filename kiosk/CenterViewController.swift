@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import WebKit
 
-class ViewController: UIViewController {
+class CenterViewController: UIViewController {
     
     let webView = WKWebView()
     
@@ -20,9 +20,11 @@ class ViewController: UIViewController {
         with(webView) {
             view.addSubview($0)
             
+            let request = URLRequest(url: URL(string: "https://www.google.com")!)
+            $0.load(request)
+            
             $0.snp.makeConstraints {
                 $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-                
                 $0.bottom.equalTo(view)
             }
         }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-let mainViewController = ViewController()
+let mainViewController = ContainerViewController()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
