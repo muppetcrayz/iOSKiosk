@@ -7,20 +7,26 @@
 //
 
 import UIKit
+import SnapKit
 import WebKit
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var webView: WKWebView!
+    let webView = WKWebView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let url = URLRequest(url: URL(string: "http://google.com")!)
-        webView.load(url)
-        // Do any additional setup after loading the view.
         
+        with(webView) {
+            view.addSubview($0)
+            
+            $0.snp.makeConstraints {
+                $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+                
+                $0.bottom.equalTo(view)
+            }
+        }
     }
-
 
 }
 
