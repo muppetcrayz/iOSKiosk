@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import WebKit
 
-class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate {
+class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, UIGestureRecognizerDelegate {
     
     var webView: WKWebView!
     let uiview = UIView()
@@ -43,81 +43,100 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
             }
         }
         
+        with(uiview) {
+            $0.isHidden = true
+            view.addSubview($0)
+            
+            $0.backgroundColor = .white
+            $0.layer.shadowColor = UIColor.darkGray.cgColor
+            $0.layer.shadowRadius = 10
+            $0.layer.shadowOpacity = 1
+            $0.layer.shadowOffset = CGSize.zero
+            
+            $0.snp.makeConstraints {
+                $0.top.leading.bottom.equalTo(view.safeAreaLayoutGuide)
+                $0.width.equalTo(300)
+            }
+            
+            let changeButton = UIButton()
+            let reloadButton = UIButton()
+            
+            with(changeButton) {
+                $0.setTitle("Change URL", for: .normal)
+                $0.setTitleColor(.black, for: .normal)
+                $0.setImage(UIImage(named: "change"), for: .normal)
+                
+                uiview.addSubview($0)
+                
+                $0.addAction(for: .touchUpInside) {
+                    let alert = UIAlertController(title: "Change URL", message: "Enter new URL with https://", preferredStyle: .alert)
+                    alert.addTextField { (textField) in
+                        textField.text = self.defaults.string(forKey: "url") ?? "https://www.google.com"
+                    }
+                    
+                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+                        let text = alert?.textFields![0].text!
+                        self.defaults.set(text, forKey: "url")
+                        let request = URLRequest(url: URL(string: text ?? "https://www.google.com")!)
+                        self.webView.load(request)
+                        self.uiview.isHidden = true
+                    }))
+                    
+                    
+                    self.present(alert, animated: true, completion: nil)
+                    
+                }
+                
+                $0.snp.makeConstraints {
+                    $0.top.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
+                }
+            }
+            
+            with(reloadButton) {
+                $0.setTitle("Refresh Page", for: .normal)
+                $0.setTitleColor(.black, for: .normal)
+                $0.setImage(UIImage(named: "refresh"), for: .normal)
+                
+                uiview.addSubview($0)
+                
+                $0.addAction(for: .touchUpInside) {
+                    let url = self.defaults.string(forKey: "url") ?? "https://www.google.com"
+                    let request = URLRequest(url: URL(string: url)!)
+                    self.webView.load(request)
+                    self.uiview.isHidden = true
+                }
+                
+                $0.snp.makeConstraints {
+                    $0.top.equalTo(changeButton).offset(40)
+                    $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
+                }
+            }
+        }
+        
         let swipeRight = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(self.respondToSwipeGesture))
         swipeRight.edges = .left
+        swipeRight.delegate = self
         self.view.addGestureRecognizer(swipeRight)
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.respondToTapGesture))
+        tapGesture.delegate = self
+        self.webView.addGestureRecognizer(tapGesture)
+        
+    }
+    
+    @objc
+    func respondToTapGesture(_ gestureRecognizer : UITapGestureRecognizer) {
+        if gestureRecognizer.state == .ended {
+            if uiview.isHidden == false {
+                uiview.isHidden = true
+            }
+        }
     }
     
     @objc
     func respondToSwipeGesture(_ recognizer: UIScreenEdgePanGestureRecognizer) {
         if (recognizer.state == .ended) {
-            with(uiview) {
-                view.addSubview($0)
-                
-                $0.backgroundColor = .white
-                $0.layer.shadowColor = UIColor.darkGray.cgColor
-                $0.layer.shadowRadius = 10
-                $0.layer.shadowOpacity = 1
-                $0.layer.shadowOffset = CGSize.zero
-                
-                $0.snp.makeConstraints {
-                    $0.top.leading.bottom.equalTo(view.safeAreaLayoutGuide)
-                    $0.width.equalTo(300)
-                }
-                
-                let changeButton = UIButton()
-                let reloadButton = UIButton()
-                
-                with(changeButton) {
-                    $0.setTitle("Change URL", for: .normal)
-                    $0.setTitleColor(.black, for: .normal)
-                    $0.setImage(UIImage(named: "change"), for: .normal)
-                    
-                    uiview.addSubview($0)
-                    
-                    $0.addAction(for: .touchUpInside) {
-                        let alert = UIAlertController(title: "Change URL", message: "Enter new URL with https://", preferredStyle: .alert)
-                        alert.addTextField { (textField) in
-                            textField.text = self.defaults.string(forKey: "url") ?? "https://www.google.com"
-                        }
-                        
-                        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
-                            let text = alert?.textFields![0].text!
-                            self.defaults.set(text, forKey: "url")
-                            let request = URLRequest(url: URL(string: text ?? "https://www.google.com")!)
-                            self.webView.load(request)
-                        }))
-                        
-                        
-                        self.present(alert, animated: true, completion: nil)
-                        
-                    }
-                    
-                    $0.snp.makeConstraints {
-                        $0.top.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
-                    }
-                }
-                
-                with(reloadButton) {
-                    $0.setTitle("Refresh Page", for: .normal)
-                    $0.setTitleColor(.black, for: .normal)
-                    $0.setImage(UIImage(named: "refresh"), for: .normal)
-                    
-                    uiview.addSubview($0)
-                    
-                    $0.addAction(for: .touchUpInside) {
-                        let url = self.defaults.string(forKey: "url") ?? "https://www.google.com"
-                        let request = URLRequest(url: URL(string: url)!)
-                        self.webView.load(request)
-                    }
-                    
-                    $0.snp.makeConstraints {
-                        $0.top.equalTo(changeButton).offset(40)
-                        $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
-                    }
-                }
-            }
+            uiview.isHidden = false
         }
     }
     
@@ -179,6 +198,10 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         }))
         
         present(alertController, animated: true, completion: nil)
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }
 
