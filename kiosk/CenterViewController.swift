@@ -29,13 +29,12 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         with(webView) {
             view.addSubview($0!)
             
-            let url = defaults.string(forKey: "url") ?? "https://www.google.com"
+            let url = defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com"
             let request = URLRequest(url: URL(string: url)!)
             
             $0!.load(request)
             $0!.navigationDelegate = self
             $0!.uiDelegate = self
-            $0!.allowsBackForwardNavigationGestures = true
             
             $0!.snp.makeConstraints {
                 $0.top.leading.trailing.equalTo(view.safeAreaLayoutGuide)
@@ -60,24 +59,39 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
             
             let changeButton = UIButton()
             let reloadButton = UIButton()
+            let barButton = UIButton()
+            let cafeButton = UIButton()
+            let restaurantButton = UIButton()
+            let retailButton = UIButton()
             
             with(changeButton) {
-                $0.setTitle("Change URL", for: .normal)
+                $0.setTitle("Change Base URL", for: .normal)
                 $0.setTitleColor(.black, for: .normal)
                 $0.setImage(UIImage(named: "change"), for: .normal)
                 
                 uiview.addSubview($0)
                 
                 $0.addAction(for: .touchUpInside) {
-                    let alert = UIAlertController(title: "Change URL", message: "Enter new URL with https://", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Change Base URL", message: "Enter new URL with https://, terminal ID, and POS type (retail, bar, cafe, or restaurant)", preferredStyle: .alert)
                     alert.addTextField { (textField) in
-                        textField.text = self.defaults.string(forKey: "url") ?? "https://www.google.com"
+                        textField.text = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com"
+                    }
+                    alert.addTextField { (textField) in
+                        textField.text = self.defaults.string(forKey: "terminal") ?? "1"
+                    }
+                    alert.addTextField { (textField) in
+                        textField.text = self.defaults.string(forKey: "pos") ?? "retail"
                     }
                     
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
-                        let text = alert?.textFields![0].text!
-                        self.defaults.set(text, forKey: "url")
-                        let request = URLRequest(url: URL(string: text ?? "https://www.google.com")!)
+                        let text1 = alert?.textFields![0].text!
+                        self.defaults.set(text1, forKey: "url")
+                        let text2 = alert?.textFields![1].text!
+                        self.defaults.set(text2, forKey: "terminal")
+                        let text3 = alert?.textFields![0].text!
+                        self.defaults.set(text3, forKey: "pos")
+                        let text = text1! + "/wp-terminal-session.php?id=" + text2! + "&pos_type=" + text3!;
+                        let request = URLRequest(url: URL(string: text)!)
                         self.webView.load(request)
                         self.uiview.isHidden = true
                     }))
@@ -96,18 +110,108 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 $0.setTitle("Refresh Page", for: .normal)
                 $0.setTitleColor(.black, for: .normal)
                 $0.setImage(UIImage(named: "refresh"), for: .normal)
+
+                uiview.addSubview($0)
+
+                $0.addAction(for: .touchUpInside) {
+                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    url += self.defaults.string(forKey: "pos") ?? "retail"
+                    let request = URLRequest(url: URL(string: url)!)
+                    self.webView.load(request)
+                    self.uiview.isHidden = true
+                }
+
+                $0.snp.makeConstraints {
+                    $0.top.equalTo(changeButton).offset(40)
+                    $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
+                }
+            }
+            
+            with(barButton) {
+                $0.setTitle("Bar POS", for: .normal)
+                $0.setTitleColor(.black, for: .normal)
+                $0.setImage(UIImage(named: "bar"), for: .normal)
                 
                 uiview.addSubview($0)
                 
                 $0.addAction(for: .touchUpInside) {
-                    let url = self.defaults.string(forKey: "url") ?? "https://www.google.com"
+                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    url += "bar"
                     let request = URLRequest(url: URL(string: url)!)
                     self.webView.load(request)
                     self.uiview.isHidden = true
                 }
                 
                 $0.snp.makeConstraints {
-                    $0.top.equalTo(changeButton).offset(40)
+                    $0.top.equalTo(reloadButton).offset(40)
+                    $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
+                }
+            }
+            
+            with(cafeButton) {
+                $0.setTitle("Cafe POS", for: .normal)
+                $0.setTitleColor(.black, for: .normal)
+                $0.setImage(UIImage(named: "cafe"), for: .normal)
+                
+                uiview.addSubview($0)
+                
+                $0.addAction(for: .touchUpInside) {
+                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    url += "cafe"
+                    let request = URLRequest(url: URL(string: url)!)
+                    self.webView.load(request)
+                    self.uiview.isHidden = true
+                }
+                
+                $0.snp.makeConstraints {
+                    $0.top.equalTo(barButton).offset(40)
+                    $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
+                }
+            }
+            
+            with (restaurantButton) {
+                $0.setTitle("Restaurant POS", for: .normal)
+                $0.setTitleColor(.black, for: .normal)
+                $0.setImage(UIImage(named: "restaurant"), for: .normal)
+                
+                uiview.addSubview($0)
+                
+                $0.addAction(for: .touchUpInside) {
+                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    url += "restaurant"
+                    let request = URLRequest(url: URL(string: url)!)
+                    self.webView.load(request)
+                    self.uiview.isHidden = true
+                }
+                
+                $0.snp.makeConstraints {
+                    $0.top.equalTo(cafeButton).offset(40)
+                    $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
+                }
+            }
+            
+            with (retailButton) {
+                $0.setTitle("Retail POS", for: .normal)
+                $0.setTitleColor(.black, for: .normal)
+                $0.setImage(UIImage(named: "retail"), for: .normal)
+                
+                uiview.addSubview($0)
+                
+                $0.addAction(for: .touchUpInside) {
+                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    url += "retail"
+                    let request = URLRequest(url: URL(string: url)!)
+                    self.webView.load(request)
+                    self.uiview.isHidden = true
+                }
+                
+                $0.snp.makeConstraints {
+                    $0.top.equalTo(restaurantButton).offset(40)
                     $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
                 }
             }
