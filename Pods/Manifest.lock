@@ -1,16 +1,20 @@
 PODS:
+  - iOSDropDown (0.2.7)
   - SnapKit (4.2.0)
 
 DEPENDENCIES:
+  - iOSDropDown
   - SnapKit
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
+    - iOSDropDown
     - SnapKit
 
 SPEC CHECKSUMS:
+  iOSDropDown: 7a4cfc67d5166f319858747b63cd2f7760c4fb4b
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: 749719d44a5e1c15c24ff1b9cd0fa0dcd3e081fa
+PODFILE CHECKSUM: b23bcf15cfefb693975bc4817667aaf6c8ef849c
 
 COCOAPODS: 1.5.3

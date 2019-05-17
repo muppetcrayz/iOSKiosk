@@ -72,25 +72,33 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 uiview.addSubview($0)
                 
                 $0.addAction(for: .touchUpInside) {
-                    let alert = UIAlertController(title: "Change Base URL", message: "Enter new URL with https://, terminal ID, and POS type (retail, bar, cafe, or restaurant)", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Change Base URL", message: "Enter POS ID, terminal ID, and POS type", preferredStyle: .alert)
                     alert.addTextField { (textField) in
-                        textField.text = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com"
+                        textField.text = self.defaults.string(forKey: "id") ?? "ecommerce"
                     }
                     alert.addTextField { (textField) in
                         textField.text = self.defaults.string(forKey: "terminal") ?? "1"
                     }
                     alert.addTextField { (textField) in
-                        textField.text = self.defaults.string(forKey: "pos") ?? "retail"
+                        textField.text = self.defaults.string(forKey: "type") ?? "retail"
                     }
                     
                     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
                         let text1 = alert?.textFields![0].text!
-                        self.defaults.set(text1, forKey: "url")
+                        self.defaults.set(text1, forKey: "id")
                         let text2 = alert?.textFields![1].text!
                         self.defaults.set(text2, forKey: "terminal")
                         let text3 = alert?.textFields![0].text!
-                        self.defaults.set(text3, forKey: "pos")
-                        let text = text1! + "/wp-terminal-session.php?id=" + text2! + "&pos_type=" + text3!;
+                        self.defaults.set(text3, forKey: "type")
+                        var url = ""
+                        if (text1! != "ecommerce") {
+                            url = "https://pos" + text1! + ".dubtel.com"
+                        }
+                        else {
+                            url = "https://ecommerce.dubtel.com"
+                        }
+                        let text = url + "/wp-terminal-session.php?id=" + text2! + "&pos_type=" + text3!;
+                        self.defaults.set(text, forKey: "url")
                         let request = URLRequest(url: URL(string: text)!)
                         self.webView.load(request)
                         self.uiview.isHidden = true
@@ -114,9 +122,17 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 uiview.addSubview($0)
 
                 $0.addAction(for: .touchUpInside) {
-                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
-                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
-                    url += self.defaults.string(forKey: "pos") ?? "retail"
+                    var url = ""
+                    let id = self.defaults.string(forKey: "id") ?? "ecommerce"
+                    if (id != "ecommerce") {
+                        url = "https://pos" + id + ".dubtel.com"
+                    }
+                    else {
+                        url = "https://ecommerce.dubtel.com"
+                    }
+                    url += "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
+                    url += self.defaults.string(forKey: "type") ?? "retail"
                     let request = URLRequest(url: URL(string: url)!)
                     self.webView.load(request)
                     self.uiview.isHidden = true
@@ -136,9 +152,18 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 uiview.addSubview($0)
                 
                 $0.addAction(for: .touchUpInside) {
-                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
-                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    var url = ""
+                    let id = self.defaults.string(forKey: "id") ?? "ecommerce"
+                    if (id != "ecommerce") {
+                        url = "https://pos" + id + ".dubtel.com"
+                    }
+                    else {
+                        url = "https://ecommerce.dubtel.com"
+                    }
+                    url += "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "id") ?? "0" + "&pos_type="
                     url += "bar"
+                    self.defaults.set(url, forKey: "url")
                     let request = URLRequest(url: URL(string: url)!)
                     self.webView.load(request)
                     self.uiview.isHidden = true
@@ -158,9 +183,18 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 uiview.addSubview($0)
                 
                 $0.addAction(for: .touchUpInside) {
-                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
-                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    var url = ""
+                    let id = self.defaults.string(forKey: "id") ?? "ecommerce"
+                    if (id != "ecommerce") {
+                        url = "https://pos" + id + ".dubtel.com"
+                    }
+                    else {
+                        url = "https://ecommerce.dubtel.com"
+                    }
+                    url += "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
                     url += "cafe"
+                    self.defaults.set(url, forKey: "url")
                     let request = URLRequest(url: URL(string: url)!)
                     self.webView.load(request)
                     self.uiview.isHidden = true
@@ -180,9 +214,18 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 uiview.addSubview($0)
                 
                 $0.addAction(for: .touchUpInside) {
-                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
-                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    var url = ""
+                    let id = self.defaults.string(forKey: "id") ?? "ecommerce"
+                    if (id != "ecommerce") {
+                        url = "https://pos" + id + ".dubtel.com"
+                    }
+                    else {
+                        url = "https://ecommerce.dubtel.com"
+                    }
+                    url += "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
                     url += "restaurant"
+                    self.defaults.set(url, forKey: "url")
                     let request = URLRequest(url: URL(string: url)!)
                     self.webView.load(request)
                     self.uiview.isHidden = true
@@ -202,9 +245,18 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 uiview.addSubview($0)
                 
                 $0.addAction(for: .touchUpInside) {
-                    var url = self.defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com" + "/wp-terminal-session.php?id="
-                    url += self.defaults.string(forKey: "id") ?? "0" + "pos_type="
+                    var url = ""
+                    let id = self.defaults.string(forKey: "id") ?? "ecommerce"
+                    if (id != "ecommerce") {
+                        url = "https://pos" + id + ".dubtel.com"
+                    }
+                    else {
+                        url = "https://ecommerce.dubtel.com"
+                    }
+                    url += "/wp-terminal-session.php?id="
+                    url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
                     url += "retail"
+                    self.defaults.set(url, forKey: "url")
                     let request = URLRequest(url: URL(string: url)!)
                     self.webView.load(request)
                     self.uiview.isHidden = true
