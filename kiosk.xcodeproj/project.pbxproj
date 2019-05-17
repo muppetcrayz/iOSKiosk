@@ -12,6 +12,7 @@
 		080BFDF12271043A00F668F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 080BFDF02271043A00F668F3 /* Assets.xcassets */; };
 		080BFDF42271043A00F668F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 080BFDF22271043A00F668F3 /* LaunchScreen.storyboard */; };
 		080BFDFD2271FA5100F668F3 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 080BFDFC2271FA5100F668F3 /* WebKit.framework */; };
+		089C24A6228F2CB6000C9BB0 /* iOSDropDown.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 089C24A5228F2CB6000C9BB0 /* iOSDropDown.framework */; };
 		08D627FC22720BE7004BCF91 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D627FB22720BE7004BCF91 /* Extensions.swift */; };
 		F31D1F06087BF5460F2A663F /* Pods_kiosk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BA0637032217F231F3EF917 /* Pods_kiosk.framework */; };
 /* End PBXBuildFile section */
@@ -24,6 +25,8 @@
 		080BFDF32271043A00F668F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		080BFDF52271043A00F668F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		080BFDFC2271FA5100F668F3 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		089C24A3228F21BB000C9BB0 /* iOSDropDown.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iOSDropDown.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		089C24A5228F2CB6000C9BB0 /* iOSDropDown.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = iOSDropDown.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		08D627FB22720BE7004BCF91 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4421B9AA5D3E6523022444D0 /* Pods-kiosk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kiosk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kiosk/Pods-kiosk.debug.xcconfig"; sourceTree = "<group>"; };
 		881EE58E55B7155E3B6138FE /* Pods-kiosk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kiosk.release.xcconfig"; path = "Pods/Target Support Files/Pods-kiosk/Pods-kiosk.release.xcconfig"; sourceTree = "<group>"; };
@@ -35,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				089C24A6228F2CB6000C9BB0 /* iOSDropDown.framework in Frameworks */,
 				080BFDFD2271FA5100F668F3 /* WebKit.framework in Frameworks */,
 				F31D1F06087BF5460F2A663F /* Pods_kiosk.framework in Frameworks */,
 			);
@@ -77,6 +81,8 @@
 		080BFDFB2271FA5100F668F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				089C24A5228F2CB6000C9BB0 /* iOSDropDown.framework */,
+				089C24A3228F21BB000C9BB0 /* iOSDropDown.framework */,
 				080BFDFC2271FA5100F668F3 /* WebKit.framework */,
 				9BA0637032217F231F3EF917 /* Pods_kiosk.framework */,
 			);

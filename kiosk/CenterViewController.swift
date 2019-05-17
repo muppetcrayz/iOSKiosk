@@ -9,8 +9,18 @@
 import UIKit
 import SnapKit
 import WebKit
+import iOSDropDown
 
-class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, UIGestureRecognizerDelegate {
+class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, UIGestureRecognizerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 4
+    }
+    
     
     var webView: WKWebView!
     let uiview = UIView()
@@ -73,23 +83,46 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 
                 $0.addAction(for: .touchUpInside) {
                     let alert = UIAlertController(title: "Change Base URL", message: "Enter POS ID, terminal ID, and POS type", preferredStyle: .alert)
+                    
                     alert.addTextField { (textField) in
                         textField.text = self.defaults.string(forKey: "id") ?? "ecommerce"
                     }
                     alert.addTextField { (textField) in
                         textField.text = self.defaults.string(forKey: "terminal") ?? "1"
                     }
-                    alert.addTextField { (textField) in
-                        textField.text = self.defaults.string(forKey: "type") ?? "retail"
+                
+                    alert.view.snp.makeConstraints {
+                        $0.height.equalTo(250)
                     }
                     
-                    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { [weak alert] (_) in
+                    let dropdown = DropDown(frame: CGRect(x: 25, y: 155, width: 240, height: 40))
+                    dropdown.selectedIndex = 3
+                    dropdown.optionArray = ["Bar", "Cafe", "Restaurant", "Retail"]
+                    dropdown.optionIds = [0,1,2,3]
+                    dropdown.text = "Select your POS type"
+                    
+                    dropdown.didSelect { (selectedText, index, id) in
+                        switch selectedText {
+                            case "Bar":
+                                self.defaults.set("bar", forKey: "type")
+                            case "Cafe":
+                                self.defaults.set("cafe", forKey: "type")
+                            case "Restaurant":
+                                self.defaults.set("restaurant", forKey: "type")
+                            case "Retail":
+                                self.defaults.set("retail", forKey: "type")
+                            default:
+                                self.defaults.set("retail", forKey: "type")
+                        }
+                    }
+                    
+                    alert.view.addSubview(dropdown)
+
+                    alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { [weak alert] (_) in
                         let text1 = alert?.textFields![0].text!
                         self.defaults.set(text1, forKey: "id")
                         let text2 = alert?.textFields![1].text!
                         self.defaults.set(text2, forKey: "terminal")
-                        let text3 = alert?.textFields![0].text!
-                        self.defaults.set(text3, forKey: "type")
                         var url = ""
                         if (text1! != "ecommerce") {
                             url = "https://pos" + text1! + ".dubtel.com"
@@ -97,16 +130,16 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                         else {
                             url = "https://ecommerce.dubtel.com"
                         }
-                        let text = url + "/wp-terminal-session.php?id=" + text2! + "&pos_type=" + text3!;
+                        var text = url + "/wp-terminal-session.php?id=" + text2! + "&pos_type="
+                        text += self.defaults.string(forKey: "type") ?? "retail"
                         self.defaults.set(text, forKey: "url")
                         let request = URLRequest(url: URL(string: text)!)
                         self.webView.load(request)
                         self.uiview.isHidden = true
                     }))
-                    
-                    
+
+
                     self.present(alert, animated: true, completion: nil)
-                    
                 }
                 
                 $0.snp.makeConstraints {
