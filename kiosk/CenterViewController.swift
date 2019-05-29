@@ -388,28 +388,62 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
-        webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.body.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
-         
-            let controller = UIPrintInteractionController.shared
-            controller.printingItem = URL(string: result as! String)
-            let printFormatter = self.webView.viewPrintFormatter()
-            controller.printFormatter = printFormatter
+        webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.head.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
             
-            let completionHandler: UIPrintInteractionController.CompletionHandler = { (printController, completed, error) in
-                if !completed {
-                    if (error) != nil {
-                        print("Wrong")
-                    } else {
-                        print("Cancelled")
-                    }
-                }
+            let commands: Data
+            
+            let builder: ISCBBuilder = StarIoExt.createCommandBuilder(AppDelegate.getEmulation())
+            
+            builder.beginDocument()
+            
+            builder
+            
+            builder.appendCutPaper(SCBCutPaperAction.partialCutWithFeed)
+            
+            builder.endDocument()
+            
+            commands = builder.commands.copy() as! Data
+            
+            self.blind = true
+            
+            let portName:     String = AppDelegate.getPortName()
+            let portSettings: String = AppDelegate.getPortSettings()
+            
+            GlobalQueueManager.shared.serialQueue.async {
+                _ = Communication.sendCommands(commands,
+                                               portName: portName,
+                                               portSettings: portSettings,
+                                               timeout: 10000,
+                                               completionHandler: { (result: Bool, title: String, message: String) in
+                                                DispatchQueue.main.async {
+                                                    self.showSimpleAlert(title: title,
+                                                                         message: message,
+                                                                         buttonTitle: "OK",
+                                                                         buttonStyle: .cancel)
+                                                    
+                                                    self.blind = false
+                                                }
+                })
             }
-
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                controller.present(from: CGRect.init(x: 0, y: 0, width: 30, height: 30), in: self.view, animated: true, completionHandler: completionHandler)
-            } else {
-                controller.present(animated: true, completionHandler: completionHandler)
-            }
+            
+//            let controller = UIPrintInteractionController.shared
+//            controller.printFormatter = UIMarkupTextPrintFormatter(markupText: result as! String)
+//
+//            let completionHandler: UIPrintInteractionController.CompletionHandler = { (printController, completed, error) in
+//                if !completed {
+//                    if (error) != nil {
+//                        print("Wrong")
+//                    } else {
+//                        print("Cancelled")
+//                    }
+//                }
+//            }
+//
+//            if UIDevice.current.userInterfaceIdiom == .pad {
+//                controller.present(from: CGRect.init(x: 0, y: 0, width: 30, height: 30), in: self.view, animated: true, completionHandler: completionHandler)
+//            } else {
+//                controller.present(animated: true, completionHandler: completionHandler)
+//            }
         }
         
     }

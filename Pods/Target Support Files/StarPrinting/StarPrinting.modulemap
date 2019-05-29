@@ -1,0 +1,6 @@
+framework module StarPrinting {
+  umbrella header "StarPrinting-umbrella.h"
+
+  export *
+  module * { export * }
+}
