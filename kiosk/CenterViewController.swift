@@ -10,6 +10,7 @@ import UIKit
 import SnapKit
 import WebKit
 import iOSDropDown
+import StarPrinting
 
 class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -20,8 +21,8 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Printer.searchForLANPrintersWithCompletionHandler { result in
-            print(result[0].status)
+        Printer.search { listOfPrinters in
+            // do something with listOfPrinters
         }
         
         let preferences = WKPreferences()
