@@ -390,40 +390,8 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         
         webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.head.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
             
-            let commands: Data
-            
-            let builder: ISCBBuilder = StarIoExt.createCommandBuilder(AppDelegate.getEmulation())
-            
-            builder.beginDocument()
-            
-            builder
-            
-            builder.appendCutPaper(SCBCutPaperAction.partialCutWithFeed)
-            
-            builder.endDocument()
-            
-            commands = builder.commands.copy() as! Data
-            
-            self.blind = true
-            
-            let portName:     String = AppDelegate.getPortName()
-            let portSettings: String = AppDelegate.getPortSettings()
-            
-            GlobalQueueManager.shared.serialQueue.async {
-                _ = Communication.sendCommands(commands,
-                                               portName: portName,
-                                               portSettings: portSettings,
-                                               timeout: 10000,
-                                               completionHandler: { (result: Bool, title: String, message: String) in
-                                                DispatchQueue.main.async {
-                                                    self.showSimpleAlert(title: title,
-                                                                         message: message,
-                                                                         buttonTitle: "OK",
-                                                                         buttonStyle: .cancel)
-                                                    
-                                                    self.blind = false
-                                                }
-                })
+            Printer.searchForLANPrintersWithCompletionHandler { result in
+                
             }
             
 //            let controller = UIPrintInteractionController.shared
