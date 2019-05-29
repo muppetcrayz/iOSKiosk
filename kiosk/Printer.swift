@@ -104,18 +104,15 @@ public class Printer {
         }
         
         free(dataSentToPrinter)
-        
-        var token: dispatch_once_t = 0
+
         if queue.operationCount == 1 {
             printing = false
             closeConnection()
-            token = 0
         } else {
-            dispatch_once(&token) {
-                dispatch_after(30, dispatch_get_main_queue()) {
+            DispatchQueue.once(token: "0") {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
                     if self.printing {
                         self.closeConnection()
-                        token = 0
                     }
                 }
             }
