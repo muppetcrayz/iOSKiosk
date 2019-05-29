@@ -20,6 +20,10 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        Printer.searchForLANPrintersWithCompletionHandler { result in
+            print(result[0].status)
+        }
+        
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
         let configuration = WKWebViewConfiguration()
@@ -390,9 +394,6 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         
         webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.head.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
             
-            Printer.searchForLANPrintersWithCompletionHandler { result in
-                
-            }
             
 //            let controller = UIPrintInteractionController.shared
 //            controller.printFormatter = UIMarkupTextPrintFormatter(markupText: result as! String)

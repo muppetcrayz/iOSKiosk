@@ -10,14 +10,19 @@
 #define kiosk_Bridging_Header_h
 
 #import "StarIO/BluetoothPort.h"
-#import "StarIO/Lock.h"
 #import "StarIO/Port.h"
 #import "StarIO/SMBluetoothManager.h"
 #import "StarIO/SMPort.h"
-#import "StarIO/SMProxiPRNTManager.h"
 #import "StarIO/starmicronics/platform/Mac.h"
 #import "StarIO/starmicronics/Platform.h"
 #import "StarIO/starmicronics/StarIOPort.h"
 #import "StarIO/WBluetoothPort.h"
+#import "StarPrinting/Printable.h"
+#import "StarPrinting/PrintCommands.h"
+#import "StarPrinting/PrintData.h"
+#import "StarPrinting/Printer.h"
+#import "StarPrinting/PrintParser.h"
+#import "StarPrinting/PrintTextFormatter.h"
+#import "StarPrinting/StarPrinting.h"
 
 #endif /* kiosk_Bridging_Header_h */

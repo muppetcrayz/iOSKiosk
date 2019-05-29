@@ -1,20 +1,24 @@
 PODS:
   - iOSDropDown (0.2.7)
   - SnapKit (4.2.0)
+  - StarPrinting (0.1.1)
 
 DEPENDENCIES:
   - iOSDropDown
   - SnapKit
+  - StarPrinting
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - iOSDropDown
     - SnapKit
+    - StarPrinting
 
 SPEC CHECKSUMS:
   iOSDropDown: 7a4cfc67d5166f319858747b63cd2f7760c4fb4b
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+  StarPrinting: c25ea4b3e4314c7cc647a7a8bff260fe755e69f3
 
-PODFILE CHECKSUM: b23bcf15cfefb693975bc4817667aaf6c8ef849c
+PODFILE CHECKSUM: fd47aadd11e9ea479c1460d96342c7e4ce31d559
 
 COCOAPODS: 1.5.3
