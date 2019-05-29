@@ -1,7 +1,7 @@
 
 import Foundation
 
-public enum TemplateError: ErrorType {
+public enum TemplateError: Swift.Error {
     public typealias RawValue = Data
     
     case FileNotFound
@@ -31,12 +31,12 @@ public struct PrintData {
             fileDataString.replaceOccurrences(of: key, with: value, options: .caseInsensitive, range: NSMakeRange(0, fileDataString.length))
         }
         
-        guard let unparsedData = fileDataString.dataUsingEncoding(NSUTF8StringEncoding) else {
+        guard let unparsedData = fileDataString.data(using: String.Encoding.utf8.rawValue) else {
             throw TemplateError.StringToDataConversion
         }
         
         let parser = TemplateParser()
-        let parsedData = parser.parse(unparsedData)
+        let parsedData = parser.parse(data: unparsedData as NSData)
         
         return parsedData
     }

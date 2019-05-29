@@ -1,7 +1,7 @@
 
 import Foundation
 
-public enum PrintingError: ErrorType {
+public enum PrintingError: Swift.Error {
     public typealias RawValue = Data
     
     case PrintDataConversion
@@ -57,14 +57,14 @@ public class Printer {
     }
     
     public static func searchForLANPrintersWithCompletionHandler(completion: @escaping ([Printer]) -> Void) {
-        DispatchQueue.global(DispatchQueue.GlobalQueuePriority.background, 0).async() {
+        DispatchQueue.global(qos: .background).async {
             let found = SMPort.searchPrinter("TCP:") as! [PortInfo]
             
             let printers = found.map { portInfo in
                 return Printer(portInfo: portInfo)
             }
-            
-            dispatch_get_main_queue().async() {
+
+            DispatchQueue.main.async {
                 completion(printers)
             }
         }
