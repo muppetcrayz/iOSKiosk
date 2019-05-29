@@ -95,7 +95,7 @@ public class Printer {
         while totalAmountWritten < UInt32(totalDataSize) {
             let amountRemaining = UInt32(totalDataSize) - totalAmountWritten
             let blockSize: UInt32 = amountRemaining > 1024 ? 1024 : amountRemaining
-            totalAmountWritten = port?.writePort(UnsafePointer<UInt8>(dataSentToPrinter), totalAmountWritten, blockSize) ?? UInt32(totalDataSize + 1)
+            totalAmountWritten = port?.write(dataSentToPrinter?.assumingMemoryBound(to: UInt8.self), totalAmountWritten, blockSize) ?? UInt32(totalDataSize + 1)
             
             if totalAmountWritten > UInt32(totalDataSize) {
                 free(dataSentToPrinter)
