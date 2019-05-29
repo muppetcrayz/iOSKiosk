@@ -11,16 +11,7 @@ import SnapKit
 import WebKit
 import iOSDropDown
 
-class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, UIGestureRecognizerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 4
-    }
-    
+class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
     var webView: WKWebView!
     let uiview = UIView()
@@ -33,6 +24,8 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         preferences.javaScriptEnabled = true
         let configuration = WKWebViewConfiguration()
         configuration.preferences = preferences
+        configuration.userContentController.add(self, name: "test")
+        configuration.userContentController.addUserScript(WKUserScript(source: "iframe.print = function() {window.webkit.messageHandlers.test.postMessage('print')}", injectionTime: .atDocumentEnd, forMainFrameOnly: false))
         
         webView = WKWebView(frame: .zero, configuration: configuration)
         
@@ -392,5 +385,43 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return true
     }
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        
+        webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.body.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
+         
+            let controller = UIPrintInteractionController.shared
+            controller.printingItem = URL(string: result as! String)
+            let printFormatter = self.webView.viewPrintFormatter()
+            controller.printFormatter = printFormatter
+            
+            let completionHandler: UIPrintInteractionController.CompletionHandler = { (printController, completed, error) in
+                if !completed {
+                    if (error) != nil {
+                        print("Wrong")
+                    } else {
+                        print("Cancelled")
+                    }
+                }
+            }
+
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                controller.present(from: CGRect.init(x: 0, y: 0, width: 30, height: 30), in: self.view, animated: true, completionHandler: completionHandler)
+            } else {
+                controller.present(animated: true, completionHandler: completionHandler)
+            }
+        }
+        
+    }
+    
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 4
+    }
+    
 }
 
