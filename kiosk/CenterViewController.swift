@@ -126,7 +126,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                         else {
                             url = "https://ecommerce.dubtel.com"
                         }
-                        var text = url + "/wp-terminal-session.php?id=" + text2! + "&pos_type="
+                        var text = url + "/wp-terminal-session.php?terminal=" + text2! + "&pos_type="
                         text += self.defaults.string(forKey: "type") ?? "retail"
                         self.defaults.set(text, forKey: "url")
                         let request = URLRequest(url: URL(string: text)!)
@@ -159,7 +159,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     else {
                         url = "https://ecommerce.dubtel.com"
                     }
-                    url += "/wp-terminal-session.php?id="
+                    url += "/wp-terminal-session.php?terminal="
                     url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
                     url += self.defaults.string(forKey: "type") ?? "retail"
                     let request = URLRequest(url: URL(string: url)!)
@@ -189,7 +189,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     else {
                         url = "https://ecommerce.dubtel.com"
                     }
-                    url += "/wp-terminal-session.php?id="
+                    url += "/wp-terminal-session.php?terminal="
                     url += self.defaults.string(forKey: "id") ?? "0" + "&pos_type="
                     url += "bar"
                     self.defaults.set(url, forKey: "url")
@@ -220,7 +220,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     else {
                         url = "https://ecommerce.dubtel.com"
                     }
-                    url += "/wp-terminal-session.php?id="
+                    url += "/wp-terminal-session.php?terminal="
                     url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
                     url += "cafe"
                     self.defaults.set(url, forKey: "url")
@@ -251,7 +251,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     else {
                         url = "https://ecommerce.dubtel.com"
                     }
-                    url += "/wp-terminal-session.php?id="
+                    url += "/wp-terminal-session.php?terminal="
                     url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
                     url += "restaurant"
                     self.defaults.set(url, forKey: "url")
@@ -282,7 +282,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     else {
                         url = "https://ecommerce.dubtel.com"
                     }
-                    url += "/wp-terminal-session.php?id="
+                    url += "/wp-terminal-session.php?terminal="
                     url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
                     url += "retail"
                     self.defaults.set(url, forKey: "url")
@@ -391,53 +391,54 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
-        webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.head.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
-            
-            let port = SMPort.getPort(printer.portName, "l", 10000)
-            
-            let string = result as? String ?? ""
-            
-            let secondWebview = WKWebView()
-            
-            with (secondWebview) {
-                self.view.addSubview($0)
+        if (self.defaults.string(forKey: "type") == "retail") {
+            webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.head.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
                 
-                $0.loadHTMLString(string, baseURL: nil)
+                let port = SMPort.getPort(printer.portName, "l", 10000)
                 
-                $0.snp.makeConstraints {
-                    $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
-                    $0.bottom.equalTo(self.view)
+                let string = result as? String ?? ""
+                
+                let secondWebview = WKWebView()
+                
+                with (secondWebview) {
+                    self.view.addSubview($0)
+                    
+                    $0.loadHTMLString(string, baseURL: nil)
+                    
+                    $0.snp.makeConstraints {
+                        $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+                        $0.bottom.equalTo(self.view)
+                    }
+                    
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    let image = self.snapshot()
+                    
+                    let builder: ISCBBuilder = StarIoExt.createCommandBuilder(.starPRNT)
+                    
+                    builder.beginDocument()
+                    
+                    builder.appendBitmap(image, diffusion: true, width: 1800, bothScale: true)
+                    
+                    builder.appendCutPaper(SCBCutPaperAction.partialCutWithFeed)
+                    
+                    builder.endDocument()
+                    
+                    let commands = builder.commands.copy() as! Data
+                    
+                    let bytes: [UInt8] = Array(commands)
+                    
+                    port?.write(bytes, 0, UInt32(bytes.count), NSErrorPointer.init(nilLiteral: ()))
+                    
+                    port?.disconnect()
+                    
+                    secondWebview.removeFromSuperview()
+                    
                 }
                 
             }
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                let image = self.snapshot()
-                
-                let builder: ISCBBuilder = StarIoExt.createCommandBuilder(.starPRNT)
-                
-                builder.beginDocument()
-                
-                builder.appendBitmap(image, diffusion: true, width: 600, bothScale: true)
-                
-                builder.appendCutPaper(SCBCutPaperAction.partialCutWithFeed)
-                
-                builder.endDocument()
-                
-                let commands = builder.commands.copy() as! Data
-                
-                let bytes: [UInt8] = Array(commands)
-                
-                port?.write(bytes, 0, UInt32(bytes.count), NSErrorPointer.init(nilLiteral: ()))
-                
-                port?.disconnect()
-                
-                secondWebview.removeFromSuperview()
-                
-            }
-            
         }
-        
     }
     
     
@@ -455,7 +456,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
         guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
         UIGraphicsEndImageContext()
-        let image2 = image.crop(to: CGSize(width: 1500, height: 600))
+        let image2 = image.crop(to: CGSize(width: 300, height: 200))
         return image2
         
     }

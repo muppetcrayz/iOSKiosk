@@ -9,23 +9,23 @@
 import UIKit
 
 public extension DispatchQueue {
-
+    
     private static var _onceTracker = [String]()
-
+    
     /**
      Executes a block of code, associated with a unique token, only once.  The code is thread safe and will
      only execute the code once even in the presence of multithreaded calls.
-
+     
      - parameter token: A unique reverse DNS style name such as com.vectorform.<name> or a GUID
      - parameter block: Block to execute once
      */
     class func once(token: String, block: () -> Void) {
         objc_sync_enter(self); defer { objc_sync_exit(self) }
-
+        
         if _onceTracker.contains(token) {
             return
         }
-
+        
         _onceTracker.append(token)
         block()
     }
@@ -81,10 +81,6 @@ extension UIImage {
         guard let newCgImage = contextImage.cgImage else { return self }
         
         let contextSize: CGSize = contextImage.size
-        
-        //Set to square
-        var posX: CGFloat = 0.0
-        var posY: CGFloat = 0.0
         let cropAspect: CGFloat = to.width / to.height
         
         var cropWidth: CGFloat = to.width
@@ -93,24 +89,20 @@ extension UIImage {
         if to.width > to.height { //Landscape
             cropWidth = contextSize.width
             cropHeight = contextSize.width / cropAspect
-            posY = (contextSize.height - cropHeight) / 2
         } else if to.width < to.height { //Portrait
             cropHeight = contextSize.height
             cropWidth = contextSize.height * cropAspect
-            posX = (contextSize.width - cropWidth) / 2
         } else { //Square
             if contextSize.width >= contextSize.height { //Square on landscape (or square)
                 cropHeight = contextSize.height
                 cropWidth = contextSize.height * cropAspect
-                posX = (contextSize.width - cropWidth) / 2
             }else{ //Square on portrait
                 cropWidth = contextSize.width
                 cropHeight = contextSize.width / cropAspect
-                posY = (contextSize.height - cropHeight) / 2
             }
         }
         
-        let rect: CGRect = CGRect(x: posX, y: posY, width: cropWidth, height: cropHeight)
+        let rect: CGRect = CGRect(x: 0, y: 0, width: cropWidth, height: cropHeight)
         
         // Create bitmap image from context using the rect
         guard let imageRef: CGImage = newCgImage.cropping(to: rect) else { return self}

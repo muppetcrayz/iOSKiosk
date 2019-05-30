@@ -24,6 +24,7 @@
 		086A89E8229F731300F7C764 /* Communication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A89E7229F731300F7C764 /* Communication.swift */; };
 		086A89EA229F735700F7C764 /* GlobalQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A89E9229F735700F7C764 /* GlobalQueueManager.swift */; };
 		086A89EC229F73A000F7C764 /* SMDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A89EB229F73A000F7C764 /* SMDefine.swift */; };
+		086A89F522A076B900F7C764 /* cert.cer in Resources */ = {isa = PBXBuildFile; fileRef = 086A89F422A076B900F7C764 /* cert.cer */; };
 		08D627FC22720BE7004BCF91 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D627FB22720BE7004BCF91 /* Extensions.swift */; };
 		A5BCC1ECE914650351B07927 /* Pods_kiosk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA5F870B1A1A836C5BAD34E /* Pods_kiosk.framework */; };
 /* End PBXBuildFile section */
@@ -49,6 +50,7 @@
 		086A89E7229F731300F7C764 /* Communication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Communication.swift; sourceTree = "<group>"; };
 		086A89E9229F735700F7C764 /* GlobalQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalQueueManager.swift; sourceTree = "<group>"; };
 		086A89EB229F73A000F7C764 /* SMDefine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMDefine.swift; sourceTree = "<group>"; };
+		086A89F422A076B900F7C764 /* cert.cer */ = {isa = PBXFileReference; lastKnownFileType = file; name = cert.cer; path = kiosk/cert.cer; sourceTree = "<group>"; };
 		08D627FB22720BE7004BCF91 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4421B9AA5D3E6523022444D0 /* Pods-kiosk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kiosk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kiosk/Pods-kiosk.debug.xcconfig"; sourceTree = "<group>"; };
 		5AA5F870B1A1A836C5BAD34E /* Pods_kiosk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kiosk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +77,7 @@
 		080BFDDD2271043700F668F3 = {
 			isa = PBXGroup;
 			children = (
+				086A89F422A076B900F7C764 /* cert.cer */,
 				080BFDE82271043800F668F3 /* kiosk */,
 				080BFDE72271043800F668F3 /* Products */,
 				080BFDFB2271FA5100F668F3 /* Frameworks */,
@@ -194,6 +197,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				086A89F522A076B900F7C764 /* cert.cer in Resources */,
 				080BFDF42271043A00F668F3 /* LaunchScreen.storyboard in Resources */,
 				080BFDF12271043A00F668F3 /* Assets.xcassets in Resources */,
 			);
