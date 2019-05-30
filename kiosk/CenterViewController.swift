@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import WebKit
 import iOSDropDown
-import StarPrinting
 
 class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
     
@@ -21,9 +20,8 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Printer.search { listOfPrinters in
-            // do something with listOfPrinters
-        }
+        let searchPrinterResult = SMPort.searchPrinter("TCP:") as? [PortInfo]
+        printer = searchPrinterResult![0]
         
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
@@ -88,7 +86,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     alert.addTextField { (textField) in
                         textField.text = self.defaults.string(forKey: "terminal") ?? "1"
                     }
-                
+                    
                     alert.view.snp.makeConstraints {
                         $0.height.equalTo(250)
                     }
@@ -101,21 +99,21 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     
                     dropdown.didSelect { (selectedText, index, id) in
                         switch selectedText {
-                            case "Bar":
-                                self.defaults.set("bar", forKey: "type")
-                            case "Cafe":
-                                self.defaults.set("cafe", forKey: "type")
-                            case "Restaurant":
-                                self.defaults.set("restaurant", forKey: "type")
-                            case "Retail":
-                                self.defaults.set("retail", forKey: "type")
-                            default:
-                                self.defaults.set("retail", forKey: "type")
+                        case "Bar":
+                            self.defaults.set("bar", forKey: "type")
+                        case "Cafe":
+                            self.defaults.set("cafe", forKey: "type")
+                        case "Restaurant":
+                            self.defaults.set("restaurant", forKey: "type")
+                        case "Retail":
+                            self.defaults.set("retail", forKey: "type")
+                        default:
+                            self.defaults.set("retail", forKey: "type")
                         }
                     }
                     
                     alert.view.addSubview(dropdown)
-
+                    
                     alert.addAction(UIAlertAction(title: "Save", style: .default, handler: { [weak alert] (_) in
                         let text1 = alert?.textFields![0].text!
                         self.defaults.set(text1, forKey: "id")
@@ -135,8 +133,8 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                         self.webView.load(request)
                         self.uiview.isHidden = true
                     }))
-
-
+                    
+                    
                     self.present(alert, animated: true, completion: nil)
                 }
                 
@@ -149,9 +147,9 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 $0.setTitle("Refresh Page", for: .normal)
                 $0.setTitleColor(.black, for: .normal)
                 $0.setImage(UIImage(named: "refresh"), for: .normal)
-
+                
                 uiview.addSubview($0)
-
+                
                 $0.addAction(for: .touchUpInside) {
                     var url = ""
                     let id = self.defaults.string(forKey: "id") ?? "ecommerce"
@@ -168,7 +166,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     self.webView.load(request)
                     self.uiview.isHidden = true
                 }
-
+                
                 $0.snp.makeConstraints {
                     $0.top.equalTo(changeButton).offset(40)
                     $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
@@ -395,25 +393,49 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         
         webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.head.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
             
+            let port = SMPort.getPort(printer.portName, "l", 10000)
             
-//            let controller = UIPrintInteractionController.shared
-//            controller.printFormatter = UIMarkupTextPrintFormatter(markupText: result as! String)
-//
-//            let completionHandler: UIPrintInteractionController.CompletionHandler = { (printController, completed, error) in
-//                if !completed {
-//                    if (error) != nil {
-//                        print("Wrong")
-//                    } else {
-//                        print("Cancelled")
-//                    }
-//                }
-//            }
-//
-//            if UIDevice.current.userInterfaceIdiom == .pad {
-//                controller.present(from: CGRect.init(x: 0, y: 0, width: 30, height: 30), in: self.view, animated: true, completionHandler: completionHandler)
-//            } else {
-//                controller.present(animated: true, completionHandler: completionHandler)
-//            }
+            let string = result as? String ?? ""
+            
+            let secondWebview = WKWebView()
+            
+            with (secondWebview) {
+                self.view.addSubview($0)
+                
+                $0.loadHTMLString(string, baseURL: nil)
+                
+                $0.snp.makeConstraints {
+                    $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+                    $0.bottom.equalTo(self.view)
+                }
+                
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                let image = self.snapshot()
+                
+                let builder: ISCBBuilder = StarIoExt.createCommandBuilder(.starPRNT)
+                
+                builder.beginDocument()
+                
+                builder.appendBitmap(image, diffusion: true, width: 600, bothScale: true)
+                
+                builder.appendCutPaper(SCBCutPaperAction.partialCutWithFeed)
+                
+                builder.endDocument()
+                
+                let commands = builder.commands.copy() as! Data
+                
+                let bytes: [UInt8] = Array(commands)
+                
+                port?.write(bytes, 0, UInt32(bytes.count), NSErrorPointer.init(nilLiteral: ()))
+                
+                port?.disconnect()
+                
+                secondWebview.removeFromSuperview()
+                
+            }
+            
         }
         
     }
@@ -425,6 +447,17 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return 4
+    }
+    
+    @objc
+    func snapshot() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, true, 0.0)
+        self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
+        guard let image = UIGraphicsGetImageFromCurrentImageContext() else { return UIImage() }
+        UIGraphicsEndImageContext()
+        let image2 = image.crop(to: CGSize(width: 1500, height: 600))
+        return image2
+        
     }
     
 }

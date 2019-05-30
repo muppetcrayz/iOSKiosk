@@ -9,6 +9,7 @@
 import UIKit
 
 let mainViewController = CenterViewController()
+var printer = PortInfo()
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
