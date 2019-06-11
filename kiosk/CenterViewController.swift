@@ -20,8 +20,20 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let searchPrinterResult = SMPort.searchPrinter("TCP:") as? [PortInfo]
-        printer = searchPrinterResult![0]
+//        let secItemClasses =  [kSecClassGenericPassword, kSecClassInternetPassword, kSecClassCertificate, kSecClassKey, kSecClassIdentity]
+//        for itemClass in secItemClasses {
+//            let spec: NSDictionary = [kSecClass: itemClass]
+//            SecItemDelete(spec)
+//        }
+//
+//        guard let cert = Bundle.main.url(forResource: "cert", withExtension:"cer") else { return }
+//        let data = try! Data(contentsOf: cert)
+//        let certificate = SecCertificateCreateWithData(nil, data as CFData)
+//        let addquery: [String: Any] = [kSecClass as String: kSecClassCertificate,
+//                                       kSecValueRef as String: certificate!,
+//                                       kSecAttrLabel as String: "My Certificate"]
+//        let status = SecItemAdd(addquery as CFDictionary, nil)
+//        print(status)
         
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
@@ -151,18 +163,8 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 uiview.addSubview($0)
                 
                 $0.addAction(for: .touchUpInside) {
-                    var url = ""
-                    let id = self.defaults.string(forKey: "id") ?? "ecommerce"
-                    if (id != "ecommerce") {
-                        url = "https://pos" + id + ".dubtel.com"
-                    }
-                    else {
-                        url = "https://ecommerce.dubtel.com"
-                    }
-                    url += "/wp-terminal-session.php?terminal="
-                    url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
-                    url += self.defaults.string(forKey: "type") ?? "retail"
-                    let request = URLRequest(url: URL(string: url)!)
+                    let url = self.defaults.string(forKey: "url")
+                    let request = URLRequest(url: URL(string: url ?? "https://ecommerce.dubtel.com")!)
                     self.webView.load(request)
                     self.uiview.isHidden = true
                 }
@@ -392,6 +394,10 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         if (self.defaults.string(forKey: "type") == "retail") {
+            
+            let searchPrinterResult = SMPort.searchPrinter("TCP:") as? [PortInfo]
+            printer = searchPrinterResult![0]
+            
             webView.evaluateJavaScript("document.getElementById('iframe').contentWindow.document.head.outerHTML + document.getElementById('iframe').contentWindow.document.body.innerHTML") { result, error in
                 
                 let port = SMPort.getPort(printer.portName, "l", 10000)
@@ -461,5 +467,9 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         
     }
     
+    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        let cred = URLCredential(trust: challenge.protectionSpace.serverTrust!)
+        completionHandler(.useCredential, cred)
+    }
+    
 }
-
