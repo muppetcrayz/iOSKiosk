@@ -133,7 +133,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                         self.defaults.set(text2, forKey: "terminal")
                         var url = ""
                         if (text1! != "ecommerce") {
-                            url = "https://pos" + text1! + ".dubtel.com"
+                            url = "https://" + text1! + ".dubtel.com"
                         }
                         else {
                             url = "https://ecommerce.dubtel.com"
@@ -186,13 +186,13 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     var url = ""
                     let id = self.defaults.string(forKey: "id") ?? "ecommerce"
                     if (id != "ecommerce") {
-                        url = "https://pos" + id + ".dubtel.com"
+                        url = "https://" + id + ".dubtel.com"
                     }
                     else {
                         url = "https://ecommerce.dubtel.com"
                     }
                     url += "/wp-terminal-session.php?terminal="
-                    url += self.defaults.string(forKey: "id") ?? "0" + "&pos_type="
+                    url += self.defaults.string(forKey: "terminal") ?? "0" + "&pos_type="
                     url += "bar"
                     self.defaults.set(url, forKey: "url")
                     let request = URLRequest(url: URL(string: url)!)
@@ -217,7 +217,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     var url = ""
                     let id = self.defaults.string(forKey: "id") ?? "ecommerce"
                     if (id != "ecommerce") {
-                        url = "https://pos" + id + ".dubtel.com"
+                        url = "https://" + id + ".dubtel.com"
                     }
                     else {
                         url = "https://ecommerce.dubtel.com"
@@ -248,7 +248,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     var url = ""
                     let id = self.defaults.string(forKey: "id") ?? "ecommerce"
                     if (id != "ecommerce") {
-                        url = "https://pos" + id + ".dubtel.com"
+                        url = "https://" + id + ".dubtel.com"
                     }
                     else {
                         url = "https://ecommerce.dubtel.com"
@@ -279,7 +279,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     var url = ""
                     let id = self.defaults.string(forKey: "id") ?? "ecommerce"
                     if (id != "ecommerce") {
-                        url = "https://pos" + id + ".dubtel.com"
+                        url = "https://" + id + ".dubtel.com"
                     }
                     else {
                         url = "https://ecommerce.dubtel.com"
