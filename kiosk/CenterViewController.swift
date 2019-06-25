@@ -154,7 +154,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                     var url = ""
                     let id = self.defaults.string(forKey: "id") ?? "ecommerce"
                     if (id != "ecommerce") {
-                        url = "https://pos" + id + ".dubtel.com"
+                        url = "https://" + id + ".dubtel.com"
                     }
                     else {
                         url = "https://ecommerce.dubtel.com"
