@@ -11,7 +11,7 @@ import SnapKit
 import WebKit
 import iOSDropDown
 
-class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, UIPickerViewDelegate, UIPickerViewDataSource {
+class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate {
     
     var webView: WKWebView!
     let uiview = UIView()
@@ -21,7 +21,12 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         super.viewDidLoad()
         
         let searchPrinterResult = SMPort.searchPrinter("TCP:") as? [PortInfo]
-        printer = searchPrinterResult![0]
+        if (searchPrinterResult!.count >= 1) {
+            printer = searchPrinterResult![0]
+        }
+        else {
+            printer = PortInfo(portName: "", macAddress: "", modelName: "")
+        }
         
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
@@ -325,6 +330,15 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         }
     }
     
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+        let cred = URLCredential(trust: challenge.protectionSpace.serverTrust!)
+        completionHandler(.useCredential, cred)
+    }
+    
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
         if navigationAction.targetFrame == nil {
             webView.load(navigationAction.request)
@@ -385,10 +399,6 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         present(alertController, animated: true, completion: nil)
     }
     
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         if (self.defaults.string(forKey: "type") == "retail") {
@@ -439,15 +449,6 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 
             }
         }
-    }
-    
-    
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 4
     }
     
     @objc
