@@ -40,7 +40,6 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         with(webView) {
             view.addSubview($0!)
             
-//            let url = "payanywhere://payment/?chargeAmount=0.50&externalNotification=true&customerTransactionId=1&returnExtras=true"
             let url = defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com"
             let request = URLRequest(url: URL(string: url)!)
             
@@ -75,6 +74,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
             let cafeButton = UIButton()
             let restaurantButton = UIButton()
             let retailButton = UIButton()
+            let startUpScreenButton = UIButton()
             
             with(changeButton) {
                 $0.setTitle("Change Base URL", for: .normal)
@@ -169,6 +169,53 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 }
             }
             
+            with(startUpScreenButton) {
+                $0.setTitle("Set Up", for: .normal)
+                $0.setTitleColor(.black, for: .normal)
+                $0.setImage(UIImage(named: "play"), for: .normal)
+                
+                uiview.addSubview($0)
+                
+                $0.addAction(for: .touchUpInside) {
+                    self.uiview.isHidden = true
+                    let startUpScreen = UIView()
+                    with(startUpScreen) {
+                        $0.backgroundColor = .init(white: 0, alpha: 0.5)
+                        
+                        self.view.addSubview($0)
+                        
+                        let detectButton = UIButton()
+                        with(detectButton) {
+                            $0.setTitle("Start", for: .normal)
+                            $0.setTitleColor(.black, for: .normal)
+                            $0.setImage(UIImage(named: "go"), for: .normal)
+                            
+                            startUpScreen.addSubview($0)
+                            
+                            $0.addAction(for: .touchUpInside) {
+                                print("hellooooo")
+                            }
+                            
+                            $0.snp.makeConstraints {
+                                $0.centerY.centerX.equalTo(self.view)
+                            }
+                            
+                        }
+                        
+                        $0.snp.makeConstraints {
+                            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+                            $0.bottom.equalTo(self.view)
+                        }
+                        
+                    }
+                }
+                
+                $0.snp.makeConstraints {
+                    $0.top.equalTo(reloadButton).offset(40)
+                    $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
+                }
+            }
+            
             with(barButton) {
                 $0.setTitle("Bar POS", for: .normal)
                 $0.setTitleColor(.black, for: .normal)
@@ -187,7 +234,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 }
                 
                 $0.snp.makeConstraints {
-                    $0.top.equalTo(reloadButton).offset(40)
+                    $0.top.equalTo(startUpScreenButton).offset(40)
                     $0.leading.equalTo(view.safeAreaLayoutGuide).offset(15)
                 }
             }
