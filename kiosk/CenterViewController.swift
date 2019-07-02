@@ -40,6 +40,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         with(webView) {
             view.addSubview($0!)
             
+//            let url = "payanywhere://payment/?chargeAmount=0.50&externalNotification=true&customerTransactionId=1&returnExtras=true"
             let url = defaults.string(forKey: "url") ?? "https://ecommerce.dubtel.com"
             let request = URLRequest(url: URL(string: url)!)
             
@@ -337,6 +338,39 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         let cred = URLCredential(trust: challenge.protectionSpace.serverTrust!)
         completionHandler(.useCredential, cred)
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        
+        if webView != self.webView {
+            decisionHandler(.allow)
+            return
+        }
+        
+        let app = UIApplication.shared
+        if let url = navigationAction.request.url {
+            // Handle target="_blank"
+            if navigationAction.targetFrame == nil {
+                if app.canOpenURL(url) {
+                    app.open(url)
+                    decisionHandler(.cancel)
+                    return
+                }
+            }
+            
+            // Handle phone and email links
+            if url.scheme == "payanywhere" {
+                if app.canOpenURL(url) {
+                    app.open(url)
+                }
+                
+                decisionHandler(.cancel)
+                return
+            }
+            
+            decisionHandler(.allow)
+        }
+        
     }
     
     func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {

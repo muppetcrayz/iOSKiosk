@@ -23,7 +23,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Needed in order to display web pages and check out users' carts.</string>
+	<string>Needed in order to display web pages and check out users&apos; carts.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Please allow access to save photo in your photo library</string>
 	<key>UILaunchStoryboardName</key>
@@ -49,5 +49,16 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSAllowsArbitraryLoadsInWebContent</key>
+		<true/>
+	</dict>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>payanywhere</string>
+    </array>
 </dict>
 </plist>
