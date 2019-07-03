@@ -11,11 +11,13 @@ import SnapKit
 import WebKit
 import iOSDropDown
 
-class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate {
+class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, ScanLANDelegate {
     
     var webView: WKWebView!
     let uiview = UIView()
+    let text = UILabel()
     let defaults = UserDefaults.standard
+    var scanner: ScanLAN!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +29,8 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         else {
             printer = PortInfo(portName: "", macAddress: "", modelName: "")
         }
+        
+        scanner = ScanLAN(delegate: self)
         
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
@@ -185,10 +189,9 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                         
                         self.view.addSubview($0)
                         
-                        let text = UILabel()
                         let button = UIButton()
                         
-                        with(text) {
+                        with(self.text) {
                             $0.text = "Terminal IP: \n\nPrinter IP:\n"
                             $0.numberOfLines = 0
                             $0.textColor = .white
@@ -216,11 +219,13 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                             }
                         }
                         
+                        self.scanner.startScan()
+                        
                         if (printer.portName == nil || printer.portName == "") {
-                            text.text = "Terminal IP: \n\nPrinter IP:\nNo printer found."
+                            self.text.text = "Terminal IP: \n\nPrinter IP:\nNo printer found."
                         }
                         else {
-                            text.text = "Terminal IP: \n\nPrinter IP:\n" + printer.portName
+                            self.text.text = "Terminal IP: \n\nPrinter IP:\n" + printer.portName
                         }
                         
                         $0.snp.makeConstraints {
@@ -338,6 +343,16 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         tapGesture.delegate = self
         self.webView.addGestureRecognizer(tapGesture)
         
+    }
+    
+    @objc
+    func scanLANDidFinishScanning() {
+        print("all done!")
+    }
+    
+    @objc
+    func scanLANDidFindNewAdrress(_ address: String!, havingHostName hostName: String!) {
+        print("address: " + address + " hostName: " + hostName)
     }
     
     @objc

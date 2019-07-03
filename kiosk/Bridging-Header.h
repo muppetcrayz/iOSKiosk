@@ -6,8 +6,8 @@
 //  Copyright © 2015年 Star Micronics. All rights reserved.
 //
 
-#ifndef StarIO_Extension_Bridging_Header_h
-#define StarIO_Extension_Bridging_Header_h
+#ifndef Bridging_Header_h
+#define Bridging_Header_h
 
 #import <StarIO_Extension/StarIoExt.h>
 #import <StarIO_Extension/StarIoExtManager.h>
@@ -17,4 +17,6 @@
 #import <SMCloudServices/SMCloudServices.h>
 #import <SMCloudServices/SMCSAllReceipts.h>
 
-#endif /* StarIO_Extension_Bridging_Header_h */
+#import "LAN/ScanLAN.m"
+
+#endif /* Bridging_Header_h */
