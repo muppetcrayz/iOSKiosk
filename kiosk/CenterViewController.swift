@@ -11,13 +11,13 @@ import SnapKit
 import WebKit
 import iOSDropDown
 
-class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, ScanLANDelegate {
+class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, MMLANScannerDelegate, SimplePingDelegate {
     
     var webView: WKWebView!
     let uiview = UIView()
     let text = UILabel()
     let defaults = UserDefaults.standard
-    var scanner: ScanLAN!
+    var scanner: MMLANScanner!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,7 +30,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
             printer = PortInfo(portName: "", macAddress: "", modelName: "")
         }
         
-        scanner = ScanLAN(delegate: self)
+        self.scanner = MMLANScanner(delegate:self)
         
         let preferences = WKPreferences()
         preferences.javaScriptEnabled = true
@@ -219,7 +219,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                             }
                         }
                         
-                        self.scanner.startScan()
+                        self.scanner.start()
                         
                         if (printer.portName == nil || printer.portName == "") {
                             self.text.text = "Terminal IP: \n\nPrinter IP:\nNo printer found."
@@ -345,14 +345,27 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         
     }
     
-    @objc
-    func scanLANDidFinishScanning() {
-        print("all done!")
+    func simplePing(pinger: SimplePing, didReceivePingResponsePacket packet: NSData, sequenceNumber: UInt16) {
+        NSLog("#%u received, size=%zu", sequenceNumber, packet.length)
     }
     
-    @objc
-    func scanLANDidFindNewAdrress(_ address: String!, havingHostName hostName: String!) {
-        print("address: " + address + " hostName: " + hostName)
+    func lanScanDidFindNewDevice(_ device: MMDevice!) {
+        let pinger = SimplePing(hostName: "http://" + device.ipAddress + ":10009")
+        print(pinger?.hostName)
+        pinger?.delegate = self;
+        pinger?.start()
+        
+        for _ in 0...10 {
+            pinger?.send(with: nil)
+        }
+    }
+    
+    func lanScanDidFinishScanning(with status: MMLanScannerStatus) {
+        print("done")
+    }
+    
+    func lanScanDidFailedToScan() {
+        print("fail")
     }
     
     @objc

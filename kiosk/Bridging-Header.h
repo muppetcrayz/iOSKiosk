@@ -17,6 +17,12 @@
 #import <SMCloudServices/SMCloudServices.h>
 #import <SMCloudServices/SMCSAllReceipts.h>
 
-#import "LAN/ScanLAN.m"
+#import "MMLANScanner.h"
+#import "LANProperties.h"
+#import "PingOperation.h"
+#import "MMLANScanner.h"
+#import "MACOperation.h"
+#import "MacFinder.h"
+#import "MMDevice.h"
 
 #endif /* Bridging_Header_h */

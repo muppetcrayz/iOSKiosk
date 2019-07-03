@@ -1,20 +1,24 @@
 PODS:
   - iOSDropDown (0.2.7)
+  - MMLanScan (3.0.0)
   - SnapKit (4.2.0)
 
 DEPENDENCIES:
   - iOSDropDown
+  - MMLanScan
   - SnapKit
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - iOSDropDown
+    - MMLanScan
     - SnapKit
 
 SPEC CHECKSUMS:
   iOSDropDown: 7a4cfc67d5166f319858747b63cd2f7760c4fb4b
+  MMLanScan: 86a0f77edbf163be30c1f58321469c7c8ce4c50e
   SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: b23bcf15cfefb693975bc4817667aaf6c8ef849c
+PODFILE CHECKSUM: ee723922fe5558378bd732d2b5f156211a05adc9
 
 COCOAPODS: 1.7.1

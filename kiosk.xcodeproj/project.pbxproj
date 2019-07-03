@@ -24,10 +24,6 @@
 		086A89E8229F731300F7C764 /* Communication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A89E7229F731300F7C764 /* Communication.swift */; };
 		086A89EA229F735700F7C764 /* GlobalQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A89E9229F735700F7C764 /* GlobalQueueManager.swift */; };
 		086A89EC229F73A000F7C764 /* SMDefine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086A89EB229F73A000F7C764 /* SMDefine.swift */; };
-		0886967122CD0A5300FD1398 /* SimplePing.m in Sources */ = {isa = PBXBuildFile; fileRef = 0886966522CD0A5200FD1398 /* SimplePing.m */; };
-		0886967222CD0A5300FD1398 /* Device.m in Sources */ = {isa = PBXBuildFile; fileRef = 0886966622CD0A5200FD1398 /* Device.m */; };
-		0886967422CD0A5300FD1398 /* SimplePingHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0886966922CD0A5200FD1398 /* SimplePingHelper.m */; };
-		0886967522CD0A5300FD1398 /* ScanLAN.m in Sources */ = {isa = PBXBuildFile; fileRef = 0886966A22CD0A5200FD1398 /* ScanLAN.m */; };
 		08D627FC22720BE7004BCF91 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08D627FB22720BE7004BCF91 /* Extensions.swift */; };
 		A5BCC1ECE914650351B07927 /* Pods_kiosk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AA5F870B1A1A836C5BAD34E /* Pods_kiosk.framework */; };
 /* End PBXBuildFile section */
@@ -53,15 +49,6 @@
 		086A89E7229F731300F7C764 /* Communication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Communication.swift; sourceTree = "<group>"; };
 		086A89E9229F735700F7C764 /* GlobalQueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalQueueManager.swift; sourceTree = "<group>"; };
 		086A89EB229F73A000F7C764 /* SMDefine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMDefine.swift; sourceTree = "<group>"; };
-		0886966422CD0A5200FD1398 /* ScanLAN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanLAN.h; sourceTree = "<group>"; };
-		0886966522CD0A5200FD1398 /* SimplePing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimplePing.m; sourceTree = "<group>"; };
-		0886966622CD0A5200FD1398 /* Device.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Device.m; sourceTree = "<group>"; };
-		0886966822CD0A5200FD1398 /* LAN Scan-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LAN Scan-Prefix.pch"; sourceTree = "<group>"; };
-		0886966922CD0A5200FD1398 /* SimplePingHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimplePingHelper.m; sourceTree = "<group>"; };
-		0886966A22CD0A5200FD1398 /* ScanLAN.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanLAN.m; sourceTree = "<group>"; };
-		0886966B22CD0A5200FD1398 /* Device.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Device.h; sourceTree = "<group>"; };
-		0886966D22CD0A5200FD1398 /* SimplePingHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplePingHelper.h; sourceTree = "<group>"; };
-		0886966E22CD0A5300FD1398 /* SimplePing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimplePing.h; sourceTree = "<group>"; };
 		08D627FB22720BE7004BCF91 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		4421B9AA5D3E6523022444D0 /* Pods-kiosk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kiosk.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kiosk/Pods-kiosk.debug.xcconfig"; sourceTree = "<group>"; };
 		5AA5F870B1A1A836C5BAD34E /* Pods_kiosk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kiosk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,7 +100,6 @@
 				080BFDE92271043800F668F3 /* AppDelegate.swift */,
 				080BFDEB2271043800F668F3 /* CenterViewController.swift */,
 				08D627FB22720BE7004BCF91 /* Extensions.swift */,
-				0886967822CD1A8100FD1398 /* LAN */,
 				0886967722CD1A6F00FD1398 /* Star */,
 			);
 			path = kiosk;
@@ -145,22 +131,6 @@
 				086A89E7229F731300F7C764 /* Communication.swift */,
 			);
 			path = Star;
-			sourceTree = "<group>";
-		};
-		0886967822CD1A8100FD1398 /* LAN */ = {
-			isa = PBXGroup;
-			children = (
-				0886966B22CD0A5200FD1398 /* Device.h */,
-				0886966622CD0A5200FD1398 /* Device.m */,
-				0886966822CD0A5200FD1398 /* LAN Scan-Prefix.pch */,
-				0886966422CD0A5200FD1398 /* ScanLAN.h */,
-				0886966A22CD0A5200FD1398 /* ScanLAN.m */,
-				0886966E22CD0A5300FD1398 /* SimplePing.h */,
-				0886966522CD0A5200FD1398 /* SimplePing.m */,
-				0886966D22CD0A5200FD1398 /* SimplePingHelper.h */,
-				0886966922CD0A5200FD1398 /* SimplePingHelper.m */,
-			);
-			path = LAN;
 			sourceTree = "<group>";
 		};
 		9229309224B40DA4B5785370 /* Pods */ = {
@@ -287,15 +257,11 @@
 				086A89E8229F731300F7C764 /* Communication.swift in Sources */,
 				08D627FC22720BE7004BCF91 /* Extensions.swift in Sources */,
 				080BFDEA2271043800F668F3 /* AppDelegate.swift in Sources */,
-				0886967422CD0A5300FD1398 /* SimplePingHelper.m in Sources */,
-				0886967222CD0A5300FD1398 /* Device.m in Sources */,
-				0886967522CD0A5300FD1398 /* ScanLAN.m in Sources */,
 				086A89E3229F6DC100F7C764 /* EnglishReceiptsImpl.swift in Sources */,
 				086A89E4229F6DC100F7C764 /* ILocalizeReceipts.swift in Sources */,
 				086A89E0229F6D3600F7C764 /* PrinterFunctions.swift in Sources */,
 				086A89EC229F73A000F7C764 /* SMDefine.swift in Sources */,
 				086A89EA229F735700F7C764 /* GlobalQueueManager.swift in Sources */,
-				0886967122CD0A5300FD1398 /* SimplePing.m in Sources */,
 				086A89DE229F6BA100F7C764 /* ModelCapability.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
