@@ -178,35 +178,55 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                 
                 $0.addAction(for: .touchUpInside) {
                     self.uiview.isHidden = true
+                    
                     let startUpScreen = UIView()
                     with(startUpScreen) {
-                        $0.backgroundColor = .init(white: 0, alpha: 0.5)
+                        $0.backgroundColor = .init(white: 0, alpha: 0.6)
                         
                         self.view.addSubview($0)
                         
-                        let detectButton = UIButton()
-                        with(detectButton) {
-                            $0.setTitle("Start", for: .normal)
-                            $0.setTitleColor(.black, for: .normal)
-                            $0.setImage(UIImage(named: "go"), for: .normal)
+                        let text = UILabel()
+                        let button = UIButton()
+                        
+                        with(text) {
+                            $0.text = "Terminal IP: \n\nPrinter IP:\n"
+                            $0.numberOfLines = 0
+                            $0.textColor = .white
+                            $0.font = $0.font.withSize(64)
+                            
+                            startUpScreen.addSubview($0)
+                            
+                            $0.snp.makeConstraints {
+                                $0.centerX.centerY.equalTo(self.view)
+                            }
+                        }
+                        
+                        with(button) {
+                            $0.setImage(UIImage(named: "close"), for: .normal)
                             
                             startUpScreen.addSubview($0)
                             
                             $0.addAction(for: .touchUpInside) {
-                                print("hellooooo")
+                                startUpScreen.removeFromSuperview()
                             }
                             
                             $0.snp.makeConstraints {
-                                $0.centerY.centerX.equalTo(self.view)
+                                $0.trailing.equalTo(self.view.safeAreaLayoutGuide).offset(-10)
+                                $0.top.equalTo(self.view.safeAreaLayoutGuide)
                             }
-                            
+                        }
+                        
+                        if (printer.portName == nil || printer.portName == "") {
+                            text.text = "Terminal IP: \n\nPrinter IP:\nNo printer found."
+                        }
+                        else {
+                            text.text = "Terminal IP: \n\nPrinter IP:\n" + printer.portName
                         }
                         
                         $0.snp.makeConstraints {
                             $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
                             $0.bottom.equalTo(self.view)
                         }
-                        
                     }
                 }
                 
