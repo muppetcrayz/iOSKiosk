@@ -93,11 +93,11 @@
 		080BFDE82271043800F668F3 /* kiosk */ = {
 			isa = PBXGroup;
 			children = (
+				080BFDE92271043800F668F3 /* AppDelegate.swift */,
 				080BFDF52271043A00F668F3 /* Info.plist */,
 				080BFDF02271043A00F668F3 /* Assets.xcassets */,
 				080BFDF22271043A00F668F3 /* LaunchScreen.storyboard */,
 				086A89DA229F66A300F7C764 /* Bridging-Header.h */,
-				080BFDE92271043800F668F3 /* AppDelegate.swift */,
 				080BFDEB2271043800F668F3 /* CenterViewController.swift */,
 				08D627FB22720BE7004BCF91 /* Extensions.swift */,
 				0886967722CD1A6F00FD1398 /* Star */,

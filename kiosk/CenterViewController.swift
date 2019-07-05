@@ -351,7 +351,6 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
     
     func lanScanDidFindNewDevice(_ device: MMDevice!) {
         let pinger = SimplePing(hostName: "http://" + device.ipAddress + ":10009")
-        print(pinger?.hostName)
         pinger?.delegate = self;
         pinger?.start()
         
