@@ -11,13 +11,14 @@ import SnapKit
 import WebKit
 import iOSDropDown
 
-class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, MMLANScannerDelegate, SimplePingDelegate {
+class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler, UIGestureRecognizerDelegate, MMLANScannerDelegate {
     
     var webView: WKWebView!
     let uiview = UIView()
     let text = UILabel()
     let defaults = UserDefaults.standard
     var scanner: MMLANScanner!
+    var address = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -192,7 +193,7 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                         let button = UIButton()
                         
                         with(self.text) {
-                            $0.text = "Terminal IP: \n\nPrinter IP:\n"
+                            $0.text = "Terminal IP:\nSearching...\nPrinter IP:\nSearching..."
                             $0.numberOfLines = 0
                             $0.textColor = .white
                             $0.font = $0.font.withSize(64)
@@ -220,13 +221,6 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
                         }
                         
                         self.scanner.start()
-                        
-                        if (printer.portName == nil || printer.portName == "") {
-                            self.text.text = "Terminal IP: \n\nPrinter IP:\nNo printer found."
-                        }
-                        else {
-                            self.text.text = "Terminal IP: \n\nPrinter IP:\n" + printer.portName
-                        }
                         
                         $0.snp.makeConstraints {
                             $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
@@ -345,26 +339,80 @@ class CenterViewController: UIViewController, WKNavigationDelegate, WKUIDelegate
         
     }
     
-    func simplePing(pinger: SimplePing, didReceivePingResponsePacket packet: NSData, sequenceNumber: UInt16) {
-        NSLog("#%u received, size=%zu", sequenceNumber, packet.length)
-    }
-    
     func lanScanDidFindNewDevice(_ device: MMDevice!) {
-        let pinger = SimplePing(hostName: "http://" + device.ipAddress + ":10009")
-        pinger?.delegate = self;
-        pinger?.start()
-        
-        for _ in 0...10 {
-            pinger?.send(with: nil)
+        if (checkTcpPortForListen(port: 10009, address: device.ipAddress)) {
+            address = device.ipAddress
         }
     }
     
     func lanScanDidFinishScanning(with status: MMLanScannerStatus) {
-        print("done")
+        if ((printer.portName == nil || printer.portName == "") && self.address == "") {
+            self.text.text = "Terminal IP:\nNo terminal found.\nPrinter IP:\nNo printer found."
+        }
+        else if (printer.portName == nil || printer.portName == "") {
+            self.text.text = "Terminal IP:\n" + self.address + "\nPrinter IP:\nNo printer found."
+        }
+        else if (self.address == "") {
+            self.text.text = "Terminal IP:\nNo terminal found.\nPrinter IP:\n" + printer.portName
+        }
+        else {
+            self.text.text = "Terminal IP:\n" + self.address + "\nPrinter IP:\n" + printer.portName
+        }
     }
     
     func lanScanDidFailedToScan() {
         print("fail")
+    }
+    
+    func checkTcpPortForListen(port: in_port_t, address: String) -> Bool {
+        
+        let socketFileDescriptor = socket(AF_INET, SOCK_STREAM, 0)
+        if socketFileDescriptor == -1 {
+            return false
+        }
+        
+        var addr = sockaddr_in()
+        let sizeOfSockkAddr = MemoryLayout<sockaddr_in>.size
+        addr.sin_len = __uint8_t(sizeOfSockkAddr)
+        addr.sin_family = sa_family_t(AF_INET)
+        addr.sin_port = Int(OSHostByteOrder()) == OSLittleEndian ? _OSSwapInt16(port) : port
+        addr.sin_addr = in_addr(s_addr: inet_addr(address))
+        addr.sin_zero = (0, 0, 0, 0, 0, 0, 0, 0)
+        var bind_addr = sockaddr()
+        memcpy(&bind_addr, &addr, Int(sizeOfSockkAddr))
+        
+        if Darwin.bind(socketFileDescriptor, &bind_addr, socklen_t(sizeOfSockkAddr)) == -1 {
+            let details = descriptionOfLastError()
+            release(socket: socketFileDescriptor)
+            return false
+        }
+        if listen(socketFileDescriptor, SOMAXCONN ) == -1 {
+            let details = descriptionOfLastError()
+            release(socket: socketFileDescriptor)
+            return false
+        }
+        release(socket: socketFileDescriptor)
+        return true
+    }
+    
+    func release(socket: Int32) {
+        Darwin.shutdown(socket, SHUT_RDWR)
+        close(socket)
+    }
+    
+    func descriptionOfLastError() -> String {
+        return String.init(cString: (UnsafePointer(strerror(errno))))
+    }
+    
+    @objc
+    func pinging(success: NSNumber) {
+        if (success.boolValue) {
+            print("yay!")
+        }
+        else {
+            print("oh no")
+        }
+        print("pinged")
     }
     
     @objc

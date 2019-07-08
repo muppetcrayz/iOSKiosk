@@ -1,4 +1,5 @@
 ${PODS_ROOT}/Target Support Files/Pods-kiosk/Pods-kiosk-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/MMLanScan/MMLanScan.framework
+${BUILT_PRODUCTS_DIR}/ReachabilitySwift/Reachability.framework
 ${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework
 ${BUILT_PRODUCTS_DIR}/iOSDropDown/iOSDropDown.framework

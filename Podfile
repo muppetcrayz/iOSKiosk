@@ -3,4 +3,5 @@ target 'kiosk' do
   pod 'SnapKit'
   pod 'iOSDropDown'
   pod 'MMLanScan'
+  pod 'ReachabilitySwift'
 end

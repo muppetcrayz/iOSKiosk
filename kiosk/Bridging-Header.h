@@ -25,4 +25,7 @@
 #import "MacFinder.h"
 #import "MMDevice.h"
 
+#import "SimplePing.h"
+#import "SimplePingHelper.h"
+
 #endif /* Bridging_Header_h */
